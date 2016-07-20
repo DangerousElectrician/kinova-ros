@@ -339,6 +339,9 @@ void KinovaArm::publishJointAngles(void)
         joint_state.position[5] = kinova_angles.joint6 * M_PI/180;
     }
 
+    // Get current finger positions from arm
+    FingerAngles fingers;
+    kinova_comm_.getFingerPositions(fingers);
     if(finger_number_==2)
     {
         joint_state.position[joint_total_number_-2] = 0;
@@ -346,9 +349,9 @@ void KinovaArm::publishJointAngles(void)
     }
     else if(finger_number_==3)
     {
-        joint_state.position[joint_total_number_-3] = 0;
-        joint_state.position[joint_total_number_-2] = 0;
-        joint_state.position[joint_total_number_-1] = 0;
+        joint_state.position[joint_total_number_-3] = fingers.Finger1 * finger_conv_ratio_;
+        joint_state.position[joint_total_number_-2] = fingers.Finger3 * finger_conv_ratio_;
+        joint_state.position[joint_total_number_-1] = fingers.Finger2 * finger_conv_ratio_;
     }
 
 
